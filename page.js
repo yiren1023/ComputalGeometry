@@ -174,7 +174,9 @@ function mode() {
         //victory
         isGivenSolutionGood = true;
         showWonMessage();
-        difficulty += 1;
+        if (difficulty !== 10){
+          difficulty += 1;
+        }
         numberOfTryLeft = 3 - (difficulty - 1);
         isDrawSolution =true;
         isPickingPointsToFormATriangle = false;
