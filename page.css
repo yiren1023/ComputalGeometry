@@ -1,62 +1,9 @@
-
-body {
-    background-color: rgba(100, 98, 95, 0.404);
-    color:black;
-    text-align: center;
-}
-
-
-.explanation{
-    display: all;
-}
-.game{
-    display: none;
-}
-
-#buttonGameExplanation{
-    text-align: center;
-}
-
-#gameExplanationText{
-    display: none;
-    padding-left: 150px;
-    padding-right: 250px;
-}
-#gameWonMessage{
-    display: none;
-}
-#gameLostMessage{
-    display: none;
-}
-#gameTryAgainMessage{
-    display: none;
-}
-
+/*top page*/
 .topPage{
     border: blue;
     text-align: center;
     color:black
-}
-.bodyPart{
-    text-align: left;
-    padding-left: 200px;
-    padding-right: 200px;
-}
-.subtitle{
-    text-align: center;
-}
-
-.image{
-    text-align: center;
-    width: 13cm;
-    height: 9cm;
-    text-align: center;
-}
-
-.imagetree{
-    width: 16cm;
-    height: 9cm;
-}
+} 
 
 .navigatingBoutons{
     background-color: #333;
@@ -81,3 +28,63 @@ body {
     background-color: #04AA6D;
     color: white;
   }
+
+
+
+body {
+    background-color: rgba(100, 98, 95, 0.404);
+    color:black;
+    text-align: center;
+}
+
+
+.explanation{
+    display: all;
+}
+
+.game{
+    display: none;
+}
+
+#buttonGameExplanation{
+    text-align: center;
+}
+
+#gameExplanationText{
+    display: none;
+    padding-left: 150px;
+    padding-right: 250px;
+}
+#gameWonMessage{
+    display: none;
+}
+#gameLostMessage{
+    display: none;
+}
+#gameTryAgainMessage{
+    display: none;
+}
+
+
+.bodyPart{
+    text-align: left;
+    padding-left: 200px;
+    padding-right: 200px;
+}
+.subtitle{
+    text-align: center;
+}
+
+.image{
+    text-align: center;
+    width: 13cm;
+    height: 9cm;
+    text-align: center;
+}
+
+.imagetree{
+    width: 16cm;
+    height: 9cm;
+}
+
+

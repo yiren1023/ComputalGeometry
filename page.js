@@ -1,5 +1,5 @@
 
-
+//page fonctions used to disable/show some part of the page
 
 function disableAllBodyPart(){
     document.getElementsByClassName("explanation")[0].style.display = "none";
@@ -39,7 +39,7 @@ function showWonMessage(){
 function showErrorMessage(){
   disableAllMessage();
   document.getElementById("gameExplanationText").style.display = "none";
-  //document.getElementById("gameErrorMessage").style.display = "block";
+  document.getElementById("gameErrorMessage").style.display = "block";
 }
 
 function showTryAgainMessage(){
@@ -58,11 +58,11 @@ function disableAllMessage(){
   document.getElementById("gameExplanationText").style.display = "none";
   document.getElementById("gameTryAgainMessage").style.display = "none";
   document.getElementById("gameWonMessage").style.display = "none";
-
+  document.getElementById("gameErrorMessage").style.display = "none";
   document.getElementById("gameLostMessage").style.display = "none";
 }
 
-
+//algorithm implementation
 /* eslint-disable no-undef, no-unused-vars */
 
 // object used to perform our algorithm
@@ -92,23 +92,6 @@ class Node {
     this.node.push(node);
   }
   calculateCenterPoints() {
-    /*
-    console.log("ca rentre dans le calcule");
-    console.log(line1);
-    console.log(line2);
-    let a1 = (line1.a.y - line1.b.y) / (line1.a.x - line1.b.x);
-    let b1 = line1.a.y - a1 * line1.a.x;
-    console.log(line1.a.y - line1.b.y);
-    console.log(line1.a.x - line1.b.x);
-    let a2 = (line2.y - line2.y) / (line2.x - line2.x);
-    let b2 = line2.y - a2 * line2.x;
-    console.log(a2);
-    console.log(b2);
-    let x = (b2 - b1) / (a1 - a2);
-    let y = a1 * x + b1;
-    console.log(x);
-    console.log(y);
-    console.log("ca sort");*/
     return new Point(line1.a.x, line2.b.y);
   }
 }
@@ -133,14 +116,14 @@ var difficulty = 1;
 var numberOfTryLeft = 3 - (difficulty - 1);
 
 //mode
-var buttonText = "Play";
 var isPlacingPoints = true;
 var isPickingPointsToFormATriangle = false;
 var isDrawSolution =false;
+var isGivenSolutionGood = false;
 
 function mode() {
   if (isPlacingPoints || isDrawSolution) {
-    resetpoints()
+    resetpoints();
     //creating the count points
     let x = 0;
     let y = 0;
@@ -158,6 +141,7 @@ function mode() {
         countPoints.push(new Point(x, y));
       }
     }
+    //create the tree from the set countPoints
     tree = treeBuild(countPoints);
 
     //creating the triangle points
@@ -179,24 +163,21 @@ function mode() {
         trianglePoints.push(new Point(x, y));
       }
     }
+    //find all possible best solution.
     findSolution();
-    console.log(solutionTriangle);
-    console.log(numberPointsInsideBestTriangle);
-
-    buttonText = "Validate";
     isDrawSolution = false;
     isPlacingPoints = false;
     isPickingPointsToFormATriangle = true;
   } else if (isPickingPointsToFormATriangle) {
     if (pickedTrianglePoints.length === 3) {
-      if (verif()) {
+      if (verif()) { // look if choosed points are in solution list
         //victory
+        isGivenSolutionGood = true;
         showWonMessage();
         difficulty += 1;
         numberOfTryLeft = 3 - (difficulty - 1);
         isDrawSolution =true;
         isPickingPointsToFormATriangle = false;
-        buttonText = "Next";
       } else {
         if (numberOfTryLeft > 0) {
           //try again
@@ -205,14 +186,14 @@ function mode() {
           numberOfTryLeft -= 1;
         } else {
           //game over
+          pickedTrianglePoints = [];
           showLostMessage();
           isDrawSolution =true;
           isPickingPointsToFormATriangle = false;
-          buttonText = "Continue";
         }
       }
     } else {
-      // faire un pop up d'erreur
+      // error message about the number of points picked to form a triangle( != 3)
       showErrorMessage();
       pickedTrianglePoints = [];
     }
@@ -226,21 +207,23 @@ function setup() {
   can.fill("black");
   textSize(40);
   buttonClear = createButton("Clear");
-  buttonNext = createButton(buttonText);
+  buttonNext = createButton("Next");
   buttonClear.parent("gameExplanation");
   buttonNext.parent("gameExplanation");
   can.mousePressed(addPoints);
-  //console.log(can.x)
-  //gam =document.getElementById("game");
-  //buttonClear.position(500 , 500);
-  buttonClear.mousePressed(resetpoints);
-  //buttonNext.position(500,600);
+  buttonClear.mousePressed(resetAll);
   buttonNext.mousePressed(mode);
   showExplanationPage();
 }
 
-function resetpoints() {
+function resetAll(){
   difficulty =1;
+  resetpoints();
+}
+
+function resetpoints() {
+  disableAllMessage();
+  isGivenSolutionGood = false;
   tree = null;
   trianglePoints = [];
   countPoints = [];
@@ -253,7 +236,7 @@ function resetpoints() {
 }
 
 function draw() {
-  // Put drawings here
+  // Drawn points, line, triangle,...
   background(200);
   for (i in countPoints) {
     ellipse(countPoints[i].x, countPoints[i].y, 4, 4);
@@ -272,11 +255,22 @@ function draw() {
       solutionTriangle[j][(int(k) + 1) % int(solutionTriangle[j].length)].x,
       solutionTriangle[j][(int(k) + 1) % int(solutionTriangle[j].length)].y
     );
+  }}
+
+  stroke("blue");
+  if (isGivenSolutionGood){
+    for(var k = 0; k < pickedTrianglePoints.length ; k +=1){
+      line(
+        pickedTrianglePoints[k].x,
+        pickedTrianglePoints[k].y,
+        pickedTrianglePoints[(int(k) + 1) % int(pickedTrianglePoints.length)].x,
+        pickedTrianglePoints[(int(k) + 1) % int(pickedTrianglePoints.length)].y
+      );
+    }
   }
-}
   stroke("blue");
   for (i in pickedTrianglePoints) {
-    ellipse(pickedTrianglePoints[i].x, pickedTrianglePoints[i].y, 4, 4);
+    ellipse(pickedTrianglePoints[i].x, pickedTrianglePoints[i].y, 8, 8);
   }
   stroke("black");
 }
@@ -302,11 +296,10 @@ function addPoints() {
 
 
 function find2LineToCutPlane(listPoints) {
+  // find 2 line in such a way that each of 4 spaces have the same number of points.
   let cloneX = [].concat(listPoints);
   let cloneY = [].concat(listPoints);
   let middle = Math.ceil(listPoints.length / 2) - 1;
-  //console.log(middle);
-  //console.log(listPoints);
   cloneX.sort((a, b) => {
     return a.x - b.x;
   });
@@ -327,6 +320,7 @@ function find2LineToCutPlane(listPoints) {
 
 
 function treeBuild(listePoints) {
+  // sort and build the tree
   let tree = new Node(null, listePoints.length, null, null, null);
   if (listePoints.length === 1) {
     tree.leaf = listePoints[0];
@@ -382,13 +376,12 @@ function treeBuild(listePoints) {
 }
 
 function countInHalfplanes(lines, tree, recurInt) {
+  //calculate the number of points inside a triangle
   if (tree === null) {
-    //console.log("arbre null");
     return null;
   } else {
     //count the number of countPoints's points in the triangle define by the three halfplanes
     if (tree.node == null) {
-      //console.log("feuille");
       if (
         orientDet(lines[0].a, lines[0].b, tree.leaf) ===
         orientDet(lines[1].a, lines[1].b, tree.leaf)
@@ -403,7 +396,6 @@ function countInHalfplanes(lines, tree, recurInt) {
         }
       }
     } else {
-      //console.log("noeud");
       let inUpLeft = false;
       let inUpRight = false;
       let inDownLeft = false;
@@ -431,13 +423,11 @@ function countInHalfplanes(lines, tree, recurInt) {
         if (orientDet(tree.line1.a, tree.line1.b, element.a)) {
           if (orientDet(tree.line2.a, tree.line2.b, element.a)) {
             if (!inUpLeft) {
-              //console.log("recursion inUpLeft");
               countInHalfplanes(lines, tree.node[0], recurInt + 1);
               inUpLeft = true;
             }
           } else {
             if (!inUpRight) {
-              //console.log("recursion inUpRight");
               countInHalfplanes(lines, tree.node[1], recurInt + 1);
               inUpRight = true;
             }
@@ -445,19 +435,16 @@ function countInHalfplanes(lines, tree, recurInt) {
         } else {
           if (orientDet(tree.line2.a, tree.line2.b, element.a)) {
             if (!inDownLeft) {
-              //console.log("recursion inDownLeft");
               countInHalfplanes(lines, tree.node[2], recurInt + 1);
               inDownLeft = true;
             }
           } else {
             if (!inDownRight) {
-              //console.log("recursion inDownRight");
               countInHalfplanes(lines, tree.node[3], recurInt + 1);
               inDownRight = true;
             }
           }
         }
-        //console.log("fin test du sommet et debut test linecross");
         //if cross a line between two space, explore both space
         let I = new Point(element.b.x - element.a.x, element.b.y - element.a.y);
 
@@ -468,7 +455,6 @@ function countInHalfplanes(lines, tree, recurInt) {
           );
           if (I.x * J.y - I.y * J.x !== 0) {
             //the lines intersect
-            //console.log("the lines intersect");
             let m =
               -(
                 -I.x * element.a.y +
@@ -487,58 +473,48 @@ function countInHalfplanes(lines, tree, recurInt) {
               (I.x * J.y - I.y * J.x);
             if (0 < m && m < 1 && 0 < k && k < 1) {
               //the segments intersect
-              //console.log("the segments intersect");
               switch (i) {
                 case 0: //upLine crossed
                   if (!inUpLeft) {
-                    //console.log("recursion inUpLeft");
                     countInHalfplanes(lines, tree.node[0], recurInt + 1);
                     inUpLeft = true;
                   }
                   if (!inUpRight) {
-                    //console.log("recursion inUpRight");
                     countInHalfplanes(lines, tree.node[1], recurInt + 1);
                     inUpRight = true;
                   }
                   break;
                 case 1: //downLine crossed
                   if (!inDownLeft) {
-                    //console.log("recursion inDownLeft");
                     countInHalfplanes(lines, tree.node[2], recurInt + 1);
                     inDownLeft = true;
                   }
                   if (!inDownRight) {
-                    //console.log("recursion inDownRight");
                     countInHalfplanes(lines, tree.node[3], recurInt + 1);
                     inDownRight = true;
                   }
                   break;
                 case 2: //leftLine crossed
                   if (!inUpLeft) {
-                    //console.log("recursion inUpLeft");
                     countInHalfplanes(lines, tree.node[0], recurInt + 1);
                     inUpLeft = true;
                   }
                   if (!inDownLeft) {
-                    //console.log("recursion inDownLeft");
                     countInHalfplanes(lines, tree.node[2], recurInt + 1);
                     inDownLeft = true;
                   }
                   break;
                 case 3: //rightLine crossed
                   if (!inDownRight) {
-                    //console.log("recursion inDownRight");
                     countInHalfplanes(lines, tree.node[3], recurInt + 1);
                     inDownRight = true;
                   }
                   if (!inUpRight) {
-                    //console.log("recursion inUpRight");
                     countInHalfplanes(lines, tree.node[1], recurInt + 1);
                     inUpRight = true;
                   }
                   break;
                 default:
-                  console.log("default case... c est pas normal");
               }
             }
           }
@@ -546,15 +522,8 @@ function countInHalfplanes(lines, tree, recurInt) {
       });
 
       //we search among the spaces not explored yet if it is because that space is totaly outside or inside the triangle
-      //console.log("fin test des sommets et linecross");
-      //console.log(inUpLeft);
-      //console.log(inUpRight);
-      //console.log(inDownLeft);
-      //console.log(inDownRight);
       let point;
       if (!inUpLeft && tree.node[0] !== null) {
-        //point = new Point(tree.node[0].line1.a.x - 1, tree.node[0].line1.a.y);
-        //console.log("upleft non visite au paravant");
         if (
           orientDet(lines[0].a, lines[0].b, centerPoint) ===
           orientDet(lines[1].a, lines[1].b, centerPoint)
@@ -565,15 +534,12 @@ function countInHalfplanes(lines, tree, recurInt) {
           ) {
             //the point is in the triangle
             //so the all space is in the triangle
-            //console.log("upleft dans triangle");
             count += tree.node[0].numberLeaf;
           }
         }
         inUpLeft = true;
       }
       if (!inUpRight && tree.node[1] !== null) {
-        //point = new Point(tree.node[1].line1.a.x - 1, tree.node[1].line1.a.y);
-        //console.log("upright non visite au paravant");
         if (
           orientDet(lines[0].a, lines[0].b, centerPoint) ===
           orientDet(lines[1].a, lines[1].b, centerPoint)
@@ -584,15 +550,12 @@ function countInHalfplanes(lines, tree, recurInt) {
           ) {
             //the point is in the triangle
             //so the all space is in the triangle
-            //console.log("upright dans triangle");
             count += tree.node[1].numberLeaf;
           }
         }
         inUpRight = true;
       }
       if (!inDownLeft && tree.node[2] !== null) {
-        //point = new Point(tree.node[2].line1.a.x - 1, tree.node[2].line1.a.y);
-        //console.log("downleft non visite au paravant");
         if (
           orientDet(lines[0].a, lines[0].b, centerPoint) ===
           orientDet(lines[1].a, lines[1].b, centerPoint)
@@ -603,15 +566,12 @@ function countInHalfplanes(lines, tree, recurInt) {
           ) {
             //the point is in the triangle
             //so the all space is in the triangle
-            //console.log("downleft dans triangle");
             count += tree.node[2].numberLeaf;
           }
         }
         inDownLeft = true;
       }
       if (!inDownRight && tree.node[3] !== null) {
-        //point = new Point(tree.node[3].line1.a.x - 1, tree.node[3].line1.a.y);
-        //console.log("downright non visite au paravant");
         if (
           orientDet(lines[0].a, lines[0].b, centerPoint) ===
           orientDet(lines[1].a, lines[1].b, centerPoint)
@@ -622,7 +582,6 @@ function countInHalfplanes(lines, tree, recurInt) {
           ) {
             //the point is in the triangle
             //so the all space is in the triangle
-            //console.log("downright dans triangle");
             count += tree.node[3].numberLeaf;
           }
         }
@@ -643,13 +602,11 @@ function orientDet(A, B, C) {
 var count = 0;
 
 function findSolution() {
-  console.log("Nouveau try");
+  //find all best possible triangle
   for (i = 0; i < int(trianglePoints.length) - 2; i++) {
     for (j = int(i) + 1; j < int(trianglePoints.length) - 1; j++) {
       for (k = int(j) + 1; k < int(trianglePoints.length); k++) {
         if (i !== j && j !== k && k !== i) {
-          console.log("new loop");
-          console.log(trianglePoints.length);
           count = 0;
           countInHalfplanes(
             [
@@ -660,11 +617,7 @@ function findSolution() {
             tree,
             1
           );
-          console.log(i, j, k);
-          console.log("comptage");
-          console.log(count);
           if (count > numberPointsInsideBestTriangle) {
-            console.log("ici ");
             //found an other possible triangle which contain more points
             solutionTriangle = [
               [trianglePoints[i], trianglePoints[j], trianglePoints[k]]

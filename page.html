@@ -145,26 +145,30 @@
             <button id="buttonGameExplanation" onclick="showGameExplanation();"> Show rule of game</button>
             <div id="gameExplanationText">
             <p > The game consist to find the triangle containing the most point. 
-                <p></p> You have to follow this 3 step:</p> 
+                <p></p> Click on the bouton "Next" to start the game</p> 
                 <ul>
-                    <li>You place points set S (Black) which are the points counted inside triangles and click on button "Next"</li>
-                    <li>You place points set R (Red) which are the points forming the possible triangles and click on button "Next"</li>
-                    <li>You choose 3 points between the set R to form the best triangle and click on button "Next"</li>
+                    <li>You have point set S (Black) which are the points which will be counted inside triangles</li>
+                    <li>You have points set R (Red) which are the points forming the possible triangles </li>
+                    <li>You choose 3 points between the set R (Red) to form the best triangle and click on button "Next"</li>
                     <li>You have 3 chances to find the best triangle</li>
                   </ul> 
+                  When you win a game, the difficulty increase.
                   If you want restart or retry with a new sets. Click on "clear".
                 
                  Have fun and good luck.
             </p>
         </div>
         <div id="gameWonMessage"> <p>
-            Nice guess ! Now it is show all possible solution !
+            Nice guess ! Now it show all possible solution !
         </p> </div>
         <div id="gameLostMessage"> <p>
             Shame ! That is/are the possibles solutions
         </p> </div>
         <div id="gameTryAgainMessage"> <p>
             Try again !
+        </p> </div>
+        <div id="gameErrorMessage"> <p>
+            You didn't choose 3 points to form a triangle !
         </p> </div>
         </div>
     </div>
