@@ -47,45 +47,44 @@
 
         <h2 class="subtitle">Explanation :</h2>
         <p>First of all, we will introduce the main concept. 
-            As it's easier to explain with plane and we will need it later, we will show it. 
-            after that it will be quite easy to transpose it with triangles.
+            As it's easier to explain with half-planes and we will need it later, we will show it. 
+            After that it will be quite easy to transpose it with triangles.
             Indeed, we can see each edge as a line cutting our plane in 2 spaces. </p>
         <p>Thus our goal is to calculate the point number of a plane side. 
-            Except that we want a efficient way that allow us querying on a lot of possibilities.
-             So a good way to increase the efficiant is to do some pre-processing. 
+            Except that we want an efficient way that allow us querying on a lot of possibilities.
+             So a good way to increase the efficiency is to do some pre-processing. 
              Pre-processing is a piece of code used to sort our datas into some data-structure to get advantages.
             In our case, we are going to use partition trees. Why ? 
-            Because the space is linear and we can reach all points easily(LOG(n)). 
+            Because the space is linear and we can reach all points easily in LOG(n). 
             Indeed, each point is stored only one time in the leaf of the tree and the search in partites tree is done in log time.</p>
-        <p>But now the question is how can be sorted our points in this tree. 
-            We will sorted by subset of points. However this subset must have 2 characteristics: 
+        <p>But now the question is how can be sorted our points in this tree.
+            We will sort by subset of points. However this subsets must have 2 characteristics: 
             the number of points in each subset must be substantially the same and the subset must take a set of points close to each other. 
             Recursivily, we will perform the same move into the first level subset until the subsets contain only 1 point.</p>
-        <p>Now we have our partition tree, we are going to take a random line. The algorithm will look which subset are crossed by this line. 
-            There are 2 cases: first one, subset are not crossed so the subset of point are either in or either out.
+        <p>Now we have our partition tree. We are going to take a random line, then the algorithm will look which subsets are crossed by this line. 
+            There are 2 cases: first one, the subset is not crossed so all the points in this subset are either in or either out.
              Second one, subset is crossed, so we need to go deeper in the partition tree and do the same again which is the level below.</p>
-        <h1>Why do we need good characteristic ?</h1>
-        <p>Now, we have the main idea, we show 2 images explaining why the characteristics   defined above are important</p>
+        <h1>Why do we need those characteristics ?</h1>
+        <p>Now, we have the main idea, we show 2 images explaining why the characteristics defined above are important</p>
         <img class="image" src="image/image1.png">
         <p>
-            In most case, when we draw a line, the line cross all the subset. 
+            In most cases, when we draw a line, the line cross all the subset. 
             There is therefore no subset where there is no need to compute.
             We want subset such that the line cross only some sub-spaces
             in such a way that we don't need to compute uncrossed sub-space and can say directly if it's in or out</p>
         <img class="image" src="image/image2.png">
-        <p>Now the line cross only the blue part. Even if we reduce the computation of 2. 
-            Majority of points are still in the computation face. 
+        <p>Now the line cross only the blue part. Even if we reduce the computation of 2, majority of points are still in the computation face. 
             What we want is that the number of points not calculated when a sub-space is not crossed, is not governed by randomness 
             but is constant through the different possibilities of cutting the plan. Otherwise the data-structure is useless for some possibility
             </p>
 
         <h2>Algorithm :</h2>
         <p>In our algorithm, we will split our space in 4 parts. We are going to use 2 lines for the splitting. 
-            As we work with 4 space each time, our tree will be 4-way tree.
-            Little specification, at the leaf level, our partition tree will have maximum 4 children and at least 1 child.
+            As we work with 4 spaces each time, our tree will be a 4-way tree.
+            Little specification : At the leaf level, our partition tree will have maximum 4 children and at least 1 child.
             We need a efficient algorithm to find our splitting lines. For that, we based ourself on the ham-sandwich theorem.
             (<a href="https://www.youtube.com/watch?v=YCXmUi56rao" target="_blank">here</a> a nice video explaining the theorem)
-            Here follow the algorithm to find:</p>
+        </p>
         <p>However the biggest difference from the general idea seen above is that we will work with triangle. 
             That mean that we check for space intersection with a triangle.</p>
         <h2>Complexity :</h2>
@@ -97,10 +96,10 @@
             
         </p>
         <p>First of all, let see the pre-processing, the only cost is the splitting our space in 4 sub-spaces. 
-            There exist a algorithm(in 2 dimensions) that is able to find the split O(N). 
+            There exist an algorithm (in 2 dimensions) that is able to find the split in O(N). 
             And like did the quicksort, we recursively do the same. Thus, the time complexity of the tree is O(N log(N))</p>
         <p>Then, we calculate the time for a query on a triangle.
-             In the normal case, without use the partition tree, we determine the the number of points in O(N) because we will check for each point 
+             In the normal case, without use the partition tree, we determine the number of points in O(N) because we will check for each point 
              if it is in or out and there are n points.</p>
         <p>For the half-plane, the time complexity go down to O(N <sup>α</sup>) where α is defined like LOG<sub>3</sub>(4).
             Why ? We have to remark that a half-plane can not cross all 4 sub-spaces. 
@@ -108,35 +107,36 @@
             we work maximally with 3 sub-spaces. Thus, the 4 in the log is the number of sub-spaces and the 3 is the maximum of space crossed.
             Now let consider triangles, the complexity become O(N <sup>α</sup> + k). 
             I recall that we can see triangle as 3 half-planes(but delimited). 
-            But we need to add case when a sub-space is crossed by 2 lines, 
-            that's why we have the + k and k is egual to the number of sub-spaces on the same level</p>
+            But we need to add a case when a sub-space is crossed by 2 lines, 
+            that's why we have the + k and k is egual to the number of sub-spaces on the same level.</p>
         <h2>Example :</h2>
         <p>We have a set of points S</p>
         <img class="image" src="image/image5.png">
 
-        <p> We split it into 4 spaces with 2 lines. We can see the resulting tree on the right </p>  
+        <p> We split it into 4 spaces with 2 lines. We can see the resulting tree on the right. </p>  
         <img class="image" src="image/image6.png">
         <img class="imagetree" src="image/tree1.png">
         <p>We perform the same move recusrsively, focusing on the green rectangle.</p>
         <img class="image" src="image/image3.png">
-        <p>Again we find our 2 cutting lines and should get this resulting tree</p>
+        <p>Again we find our 2 cutting lines and should get this resulting tree.</p>
         <img class="image" src="image/image4.png">
         <img class="imagetree" src="image/tree2.png">
-        <p>So on in each subspace until our points are sorted. We should get the following partition tree: </p>
+        <p>So on, in each subspace until our points are sorted. We should get the following partition tree: </p>
         <img id="imagetree3" src="image/tree3.png">
         <p>Now we have our partition tree builded. 
             We can start the querying. However, as said above, we want to do it with triangles instead of half-planes.
-            It exactly the same algorithm just a little adapt to see the cutting of subspaces with triangles</p>
+            It is exactly the same algorithm with just a little adapt to see the cutting of subspaces with triangles</p>
         <p>There is a example with 1 triangle.</p>
         <img class="image" src="image/image7.png">
-        <p>We want to know how many points a re inside this triangle. As explained above, we need to see which spaces are touched by the triangle.
-             And recusively we do it again until we step on a leaf and comoute if needed. 
-            If we are lucky some part are not crossed and not need to compute it. We just need to see if the space is inside or outside.</p>
+        <p>We want to know how many points are inside this triangle. As explained above, we need to see which spaces are touched by the triangle.
+             And recusively we do it again until we step on a leaf and compute if needed. 
+            If we are lucky some parts are not crossed and we not need to compute it. We just need to see if the space is inside or outside.</p>
         <p>Now let take the space top-right as the last time:</p>
         <img class="image" src="image/image8.png">
-        <p>Again we are lucky, not need to compute the 2 right parts. The 2 left parts need to be recursively look at. But that are leaf, so we just need to look if it is inside or outside. 
+        <p>Again we are lucky, not need to compute the 2 right parts. The 2 left parts need to be recursively look at. But that are leafs, so we just need to look if it is inside or outside. 
             So on until all spaces has been computed and the number of points inside is found.</p>
         <h2>bibliographie</h2>
+        <p>Agarwal, Pankaj K. “Simplex Range Searching and Its Variants: A Review.” A Journey Through Discrete Mathematics. Cham: Springer International Publishing, 2017. 1–30. Web.</p>
         <p>D. E. Willard, Polygon retrieval, SIAM J. Comput., 11 (1982), 149–165.</p>
         <p>Lo, Chi-Yuan, J. Matoušek, and W. Steiger. “Algorithms for Ham-Sandwich Cuts.” Discrete & computational geometry 11.4 (1994): 433–452. Web.</p>
     </div>
