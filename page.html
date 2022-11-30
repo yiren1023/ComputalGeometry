@@ -80,10 +80,13 @@
 
         <h2>Algorithm :</h2>
         <p>In our algorithm, we will split our space in 4 parts. We are going to use 2 lines for the splitting. 
-            As we work with 4 spaces each time, our tree will be a 4-way tree.
+            As we work with 4 spaces each time, our tree will be a 4-way tree. More specifically, 
+            there are 2 types of nodes. Leaf nodes that only store a point and intermediare nodes
+            that store the 2 cutting lines, the number of leaf under him and a reference to his 4 children.
             Little specification : At the leaf level, our partition tree will have maximum 4 children and at least 1 child.
             We need a efficient algorithm to find our splitting lines. For that, we based ourself on the ham-sandwich theorem.
-            (<a href="https://www.youtube.com/watch?v=YCXmUi56rao" target="_blank">here</a> a nice video explaining the theorem)
+            (<a href="https://www.youtube.com/watch?v=YCXmUi56rao" target="_blank">here</a> a nice video explaining the theorem).
+            
         </p>
         <p>However the biggest difference from the general idea seen above is that we will work with triangle. 
             That mean that we check for space intersection with a triangle.</p>
