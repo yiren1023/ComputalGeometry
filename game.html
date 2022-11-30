@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<link rel="stylesheet" href="game.css">
+<script src="jquery.js"></script> 
+<script src="game.js"></script>
+<!--<script src="canvas.js"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.1/p5.js"></script>
+<title>wikiHow Fan Page</title>
+</head>
+
+<body onload="init()"">
+<div class="topPage">
+    
+    <div class="navigatingBoutons">    
+        
+        <a  href='index.html' >
+            Home
+        </a>
+
+        <a class="active" href="game.html">
+            Game
+        </a>
+    
+</div>
+
+    <h1 >Simplex Range Searching</h1>
+    
+</div>
+
+
+<div class="bodyPart">
+    <div id="game">
+        <div id="gameExplanation">
+            <button id="buttonGameExplanation" onclick="showGameExplanation();"> Show rule of game</button>
+            <div id="gameExplanationText">
+            <p > The game consist to find the triangle containing the most point. 
+                <p></p> Click on the bouton "Next" to start the game</p> 
+                <ul>
+                    <li>You have point set S (Black) which are the points which will be counted inside triangles</li>
+                    <li>You have points set R (Red) which are the points forming the possible triangles </li>
+                    <li>You choose 3 points between the set R (Red) to form the best triangle and click on button "Next"</li>
+                    <li>You have 3 chances to find the best triangle</li>
+                  </ul> 
+                  When you win a game, the difficulty increase.
+                  If you want restart or retry with a new sets. Click on "clear".
+                
+                 Have fun and good luck.
+            </p>
+        </div>
+        <div id="gameWonMessage"> <p>
+            Nice guess ! Now it show all possible solution !
+        </p> </div>
+        <div id="gameLostMessage"> <p>
+            Shame ! That is/are the possibles solutions
+        </p> </div>
+        <div id="gameTryAgainMessage"> <p>
+            Try again !
+        </p> </div>
+        <div id="gameErrorMessage"> <p>
+            You didn't choose 3 points to form a triangle !
+        </p> </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+</body>
+</html>
